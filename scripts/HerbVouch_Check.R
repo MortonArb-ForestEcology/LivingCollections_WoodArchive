@@ -6,7 +6,7 @@ library(dplyr)
 library(tidyr)
 library(googlesheets4)
 
-path.data <- "G:/My Drive/LivingCollections_WoodArchive/"
+path.data <- "G:/My Drive/LivingCollections_WoodArchive/HerbariumVoucher_Extractions/"
 
 setwd(path.data)
 
@@ -17,6 +17,7 @@ colnames(herb.num) <- c("Species_Info","FULLNAME", "AccessionID")
 herb.num$AccessionID <- as.character(herb.num$AccessionID)
 
 #retrieving wood archive list and making it only include species, accession number, and voucher status
+setwd('..')
 wood.df <- sheets_find("LivingCollectionsArchive_Sample_Database")
 wood.dat <- data.frame(sheets_read(wood.df))
 wood.num <- subset(wood.dat, select = c("PlantID","AccessionID","Genus","Species", "Herbarium.Voucher"))
