@@ -27,6 +27,8 @@ herb.v <- inner_join(wood.num, herb.num)
 #removing repeats caused by multiple specimens (fruit, flower, veg) from one plant 
 herb.v <- unique(herb.v)
 #removing samples we already know have a voucher
-herb.vouch <- subset(herb.v, herb.v$Herbarium.Voucher!="Yes")
+herb.vouch <- herb.v %>% filter(Herbarium.Voucher!="Yes" | is.na(Herbarium.Voucher))
+
+View(herb.vouch)
 
 
