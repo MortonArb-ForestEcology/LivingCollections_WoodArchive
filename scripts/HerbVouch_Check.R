@@ -1,7 +1,6 @@
 #Code for comparing the accession ID of Living Collection Archive against Herbarium Vouchers
 # This script currently only pulls from a csv that hasn't been updated as of 11-19-2019
 
-t
 library(dplyr)
 library(tidyr)
 library(googlesheets4)
@@ -11,7 +10,7 @@ path.data <- "G:/My Drive/LivingCollections_WoodArchive/HerbariumVoucher_Extract
 setwd(path.data)
 
 #retrieving herbarium list and making it only include species and accession number
-herb <- read.csv("greenHERBSPM-COLLEXTRACT_19-11-2019_at_16-13-17.csv")
+herb <- read.csv("COLLEXTRACT_7-1-2020.csv")
 herb.num <- subset(herb, select = c("SPECIES", "FULLNAME", "LCSOURCE"))
 colnames(herb.num) <- c("Species_Info","FULLNAME", "AccessionID")
 herb.num$AccessionID <- as.character(herb.num$AccessionID)
