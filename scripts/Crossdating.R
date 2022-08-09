@@ -13,6 +13,7 @@ PLOT <- "Tellervo_oaks"
 path.dat <- "G:/.shortcut-targets-by-id/1cQQnkGHmgWwGh1i6_3niZvcF6ruD92Qe/URF REU 2022 Oak Decline/REU2022_AlvarezLuis/Data_REU2022_OakDecline/Ring_Width_Data/"
 fplot <- dir(file.path(path.dat, Folder), ".rwl")
 
+#Reading in all the indiviual files as one large file
 for(i in 1:length(fplot)){
   # need to read in a file and rename it; i=1
   nm.new <- strsplit(fplot[i], "-")[[1]]
@@ -30,6 +31,44 @@ for(i in 1:length(fplot)){
 summary(rwl.all)
 class(rwl.all)
 summary(data.frame(rwl.all))
+
+library(dplr)
+#------------------------------------------------------#
+# Crossdating with dplr
+#------------------------------------------------------#
+dat <- rwl.all
+
+#Initial plot of all the series
+plot(dat, plot.type="spag")
+
+#Using a series length of 60, checking for problem series
+rwl.50 <- corr.rwl.seg(dat, seg.length=50, pcrit=0.01)
+
+#Looking at a problem segment
+seg.50 <- corr.series.seg(rwl=dat, series="0011111.rwl", seg.length=50)
+
+#Zoomed in skeleton plot looking at the problem area
+win <- 1800:1960
+dat.yrs <- time(dat)
+dat.trunc <- dat[dat.yrs %in% win, ]
+ccf.30 <- ccf.series.rwl(rwl=dat.trunc, series="0011111.rwl", seg.length=30, bin.floor=50)
+
+#Zooming in even more
+win <- 1850:1900
+dat.trunc <- dat[dat.yrs %in% win, ]
+ccf.20 <- ccf.series.rwl(rwl=dat.trunc, series="0011111.rwl",
+                         seg.length=20, bin.floor=0)
+
+#Skeleton plot of the series vs the overal trend
+xskel.ccf.plot(rwl=dat, series="0011111.rwl",
+               win.start=1865, win.width=40)
+
+
+
+#------------------------------------------#
+# Cofecha file preparation
+#------------------------------------------#
+
 
 # Where you want to save the file
 path.out <- file.path(path.dat, "Combined", PLOT)
