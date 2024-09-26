@@ -19,3 +19,26 @@ summary(dat.samps)
 # Categorical Variables
 dat.samps$Genus <- as.factor(dat.samps$Genus)
 summary(dat.samps$Genus)
+
+
+#Practice making graphs and stats summaries (JG)
+genus_count <- table(dat.samps$Genus)
+barplot(genus_count,
+        main="genus count",
+        xlab= "genus",
+        ylab= "count",
+        col = "light pink",
+        las = 2)
+summary(genus_count)
+summary(dat.samps$Genus)
+
+#mean, min, max
+dat.samps$Year.Acquired<- as.numeric(dat.samps$Year.Acquired)
+summary(dat.samps$Year.Acquired)
+
+#boxplot of pith date
+boxplot(dat.samps$Pith.Date)
+summary (dat.samps$Pith.Date)
+max(dat.samps$Pith.Date, na.rm=T)
+
+
