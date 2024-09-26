@@ -13,6 +13,35 @@ PLOT <- "Tellervo_oaks"
 path.dat <- "G:/.shortcut-targets-by-id/1cQQnkGHmgWwGh1i6_3niZvcF6ruD92Qe/URF REU 2022 Oak Decline/REU2022_AlvarezLuis/Data_REU2022_OakDecline/Ring_Width_Data/"
 fplot <- dir(file.path(path.dat, Folder), ".rwl")
 
+# path.google <- "/Users/jocelyngarcia/"
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/"
+
+test <- data.frame(NUM=1:10, WORD="Hi", NUM2=10:1, WORD2=c(rep("Hi", 5), rep("Bye", 5)))
+
+test[5,2]
+
+
+test[5, 1:2]
+test[5, "WORD"] <- "bubbles" 
+
+summary(test)
+head(test)
+
+test$WORD3 <- NA
+test[6,"WORD3"]<- "Hello"
+test[4, "WORD3"]<- "Ice Cream"
+
+test$WORD42 <- ifelse(test$WORD=="bubbles", "pop", "we need bubble!")
+test[,"WORD"]
+which(test$WORD=="bubbles")
+
+
+# if(test[test$WORD=="bubbles"])
+#   
+#   else
+    
+  
+
 #Reading in all the indiviual files as one large file
 for(i in 1:length(fplot)){
   # need to read in a file and rename it; i=1
