@@ -9,9 +9,13 @@ dat.samps$SppName <- paste(dat.samps$Genus, dat.samps$Species)
 summary(dat.samps)
 dim(dat.samps)
 
+# Continuous (numeric) variables
 dat.samps$Pith.Date <- as.numeric(dat.samps$Pith.Date)
 dat.samps$Earliest.Ring <- as.numeric(dat.samps$Earliest.Ring)
 dat.samps$Latest.Ring <- as.numeric(dat.samps$Latest.Ring)
 summary(dat.samps)
 
 
+# Categorical Variables
+dat.samps$Genus <- as.factor(dat.samps$Genus)
+summary(dat.samps$Genus)
