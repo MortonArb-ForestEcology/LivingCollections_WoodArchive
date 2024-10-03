@@ -4,14 +4,17 @@ library(dplR)
 
 # path.raw <- "~/Desktop/Data/Raw Ring Widths/organized"
 # path.xdate <- "~/Desktop/Data/Raw Ring Widths/organized/crossdating"
-path.raw <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/organized"
-path.xdate <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/crossdating"
+# path.raw <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/organized"
+# path.xdate <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/crossdating"
+
+path.raw <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+path.xdate <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 
 if(!dir.exists(path.xdate)) dir.create(path.xdate, recursive = T)
 
 
-series.metadata <- read.csv(file.path(path.raw, "Series-Metadata_all.csv"))
-combined.rwl <- read.csv(file.path(path.raw, "Series-Measurements_all.csv"), row.names=1)
+series.metadata <- read.csv(file.path(path.xdate, "Series-Metadata_all.csv"))
+combined.rwl <- read.csv(file.path(path.xdate, "Series-Measurements_all.csv"), row.names=1)
 
 dim(series.metadata); dim(combined.rwl)
 
@@ -58,7 +61,24 @@ rwl.report(combined.rwl)
 sink()
 
 # Detrending
-coreDetrend <- detrend(combined.rwl, method = "Spline")  # Detrending
+#giving error that NAs are not allowed 10/3 (JG)
+#coreDetrend <- detrend(combined.rwl, method = "Spline")  # Detrending (original function)
+
+#attempt to fix error(JG)
+str(combined.rwl)  # Check structure
+sum(is.na(combined.rwl))  # Count of NA values
+
+#Q: Can I replace NA with 0, or would that be statistically wrong?
+combined.rwl[is.na(combined.rwl)] <- 0 #changes all NA to 0
+str(combined.rwl)  # Checks structure
+sum(is.na(combined.rwl)) #NA = 0
+
+coreDetrend<- detrend(combined.rwl, y.name = names(combined.rwl), make.plot = FALSE,
+        method = c("Mean"), #Q: Method previous/y "spline", is "mean" method okay?
+        nyrs = NULL, f = 0.5, pos.slope = FALSE,
+        constrain.nls = c("never", "when.fail", "always"),
+        verbose = FALSE, return.info = FALSE,
+        span = "cv", bass = 0, difference = FALSE)
 
 # plot(coreDetrend[,1:10], plot.type="spag")
 
@@ -67,7 +87,11 @@ crs <- chron(coreDetrend)  # Creating a chronology
 # Print summary of the chronology
 summary(crs)
 # Plot the chronology
-plot(crs, main = "Chronology")
+#plot(crs, main = "Chronology")
+#-----------------left off (10/3)
+
+plot.crn(crs, add.spline = FALSE, nyrs = NULL)
+
 plot(crs, main = "Chronology", add.spline = TRUE, nyrs=5)
 summary(crs)
 
