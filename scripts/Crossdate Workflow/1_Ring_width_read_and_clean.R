@@ -25,8 +25,8 @@ library(dplR)
 
 # Until pathing errors are fixed on drive This will need to be the location of these data on the users local drive
 #Only the Google Path should need to be changed
-path.google <- "~/Google Drive/My Drive/LivingCollections_WoodArchive/"
-
+# path.google <- "~/Google Drive/My Drive/LivingCollections_WoodArchive/"
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
 path.dat <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
 path.out <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 
