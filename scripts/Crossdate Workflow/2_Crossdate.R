@@ -7,6 +7,10 @@ library(dplR)
 # path.raw <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/organized"
 # path.xdate <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/crossdating"
 
+#path.raw <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+#path.xdate <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
+
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
 path.raw <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
 path.xdate <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 
