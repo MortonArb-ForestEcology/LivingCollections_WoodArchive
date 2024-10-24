@@ -29,9 +29,13 @@ library(ggplot2) # What Christy uses for making snazzy graphs
 
 # Path to our data
 # path.REU <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/"
-path.dat <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/organized/"
+#path.dat <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Raw Ring Widths/organized/"
 # Path to spit stuff out 
-path.out <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Analysis-Output"
+#path.out <- "~/Google Drive/My Drive/URF REU 2024 - Chiong - Oaks/Data/Analysis-Output"
+
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
+path.dat <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+path.out <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 
 if(!dir.exists(path.out)) dir.create(path.out)
 
@@ -44,7 +48,7 @@ sBAD <- gsub("-", ".", fBAD)
 sGOOD <- gsub("-", ".", fGOOD)
 
 # Reading in all the stats about what tree things are form etc
-series.metadata <- read.csv(file.path(path.dat, "Series-Metadata_all.csv"))
+series.metadata <- read.csv(file.path(path.out, "Series-Metadata_all.csv"))
 dim(series.metadata)# Checking dimensions to get a feel for how complex a set we're working with
 summary(series.metadata) # Checking to get a feel for the data
 head(series.metadata) # lots of stuff is characters, so spitting out the first few rows to check on what we have
@@ -56,7 +60,7 @@ summary(statsXdate) # Checking to get a feel for the data
 head(statsXdate) # lots of stuff is characters, so spitting out the first few rows to check on what we have
 
 # Read in the ring width series
-seriesRW <- read.csv(file.path(path.dat, "Series-Measurements_all.csv"), row.names=1) # Years are the row names
+seriesRW <- read.csv(file.path(path.out, "Series-Measurements_all.csv"), row.names=1) # Years are the row names
 dim(seriesRW) # Checking the dimensions
 summary(seriesRW[,1:15]) # Doing a summary of just the first couple cols because there's a LOT of them
 seriesRW[1:20,c(sBAD, sGOOD)]
