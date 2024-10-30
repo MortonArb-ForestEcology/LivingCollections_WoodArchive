@@ -34,8 +34,6 @@ path.out <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 # path.dat <- "~/Desktop/Data/Raw Ring Widths/Quercus REU 2024 - Second Pull/Quercus RW Tridas/"
 # path.out <- "~/Desktop/Data/Raw Ring Widths/organized"
 
-if(!dir.exists(path.out)) dir.create(path.out, recursive = T)
-
 # Function to process TRIDAS file # CR: This was good, but not using the funciton to make it easier to store metadata
 # process.tridas.file <- function(file) {
 #   tridas.data <- read.tridas(file, ids.from.titles = TRUE, ids.from.identifiers = TRUE, 
