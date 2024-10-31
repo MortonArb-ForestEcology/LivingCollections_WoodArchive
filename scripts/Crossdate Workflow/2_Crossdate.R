@@ -6,6 +6,13 @@
 # a form usable for analysis. 
 
 library(dplR)
+library(XML)
+library(TRADER)
+library(graphics)
+library(utils)
+
+library("XML")
+library("methods")
 
 # path.raw <- "~/Desktop/Data/Raw Ring Widths/organized"
 # path.xdate <- "~/Desktop/Data/Raw Ring Widths/organized/crossdating"
@@ -19,13 +26,15 @@ path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Driv
 path.raw <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
 path.xdate <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
 
-if(!dir.exists(path.xdate)) dir.create(path.xdate, recursive = T)
-
+if(!dir.exists(path.out)) dir.create(path.out, recursive = T)
 
 series.metadata <- read.csv(file.path(path.xdate, "Series-Metadata_all.csv"))
 combined.rwl <- read.csv(file.path(path.xdate, "Series-Measurements_all.csv"), row.names=1)
 
 dim(series.metadata); dim(combined.rwl)
+###################################################################################
+summary(combined.rwl)
+summary(series.metadata)
 
 # We probably have incomplete first & last years, so lets go ahead and remove those for our own safety
 for(i in 1:ncol(combined.rwl)){
@@ -99,7 +108,7 @@ summary(crs)
 #plot(crs, main = "Chronology")
 #-----------------left off (10/3)
 
-plot.crn(crs, add.spline = FALSE, nyrs = NULL)
+plot.crn(crs, add.spline = FALSE, nyrs = NULL) # Is this how its supposed to be, how come there isn't any sample depth? JG
 
 plot(crs, main = "Chronology", add.spline = TRUE, nyrs=5)
 summary(crs)
