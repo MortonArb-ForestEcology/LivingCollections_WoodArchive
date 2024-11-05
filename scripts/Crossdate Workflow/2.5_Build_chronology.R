@@ -2,9 +2,12 @@
 #Written by Brendon Reidy, Christy Rollinson, and Dr. Stockton Maxwell
 #Project: Living Collections Wood Archive 
 #Purpose: build a useable chronolgy for the use of the Forest Ecology Lab, users should be able to discern a pattern of tree ring sizes from chrnonolgy 
-# This scrip utilizes the dplR package (https://rdrr.io/cran/dplR/)to read files containing ringwidth measurments
+# This script utilizes the dplR package (https://rdrr.io/cran/dplR/)to read files containing ringwidth measurments
 # and their associated meta data house on the Forest Ecology Lab google drive. It then puts these data into 
 # a form usable for analysis. 
+#Resources:
+#https://stackoverflow.com/questions/76510836/how-to-plot-two-sided-bar-with-text-in-middle-chart-in-r
+#http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 
 library(dplyr)
 library(TRADER)
@@ -61,15 +64,9 @@ summary(combined.rwl)
 data <- read.csv(file.path(path.out, "chronology.csv")) #in chronology.csv res= residuals? Double check w/ Christy
 summary(data)
 
-#before splitting
+#checking data before any plotting
 print(data)
 
-#splitting std column, will be helpful for two sided barplot
-data <- data %>%
-  mutate(big_rings = ifelse(std >= 1, std, NA),
-         small_rings = ifelse(std < 1, std, NA))
-
-print(data[, c("std", "big_rings", "small_rings")])
 #plotting
 plot(data$years,
      data$std,
@@ -89,43 +86,62 @@ barplot(data$std,
         cex.main = 1.5, 
         cex.lab = 1.2, 
         cex.axis = 1.1)
-#abline(h = 1, col = "red", lty = 2) for reference
+abline(h = 1, col = "red", lty = 2) #for reference
+
+###################################################################################
+
+#splitting std column, will be helpful for two sided barplot
+data <- data %>%
+  mutate(big_rings = ifelse(std >= 1, std, NA),
+         small_rings = ifelse(std < 1, std, NA))
+print(data[, c("std", "big_rings", "small_rings")]) #checking how data was split
+
 
 #attempt at 2 sided barchart
 axis_margin <- 4
 data$years <- factor(data$years)
 
-#label_indices <- seq(1, nlevels(data$years), by = 2)
-
 get_color <- function(value) {
-  ifelse(is.na(value), "black", 
-         ifelse(value < 0.8, "orange", "steelblue")) # for marker rings, pick value to sort by 
+  ifelse(is.na(value), "gray20", 
+         ifelse(value < 0.8, "indianred4", "darkslategray")) # for marker rings, pick value to sort by 
 }
 
 # Apply the custom function to create a vector of colors
 text_colors <- get_color(data$small_rings)
 
-p1 <- ggplot(data, aes(years, small_rings)) +
-  geom_col(width = 0.7, fill = text_colors) +
-  scale_y_reverse() +
-  scale_x_discrete(position = "top", breaks = data$years[label_indices]) +  # Display fewer labels
+#Bottom Graph
+p1 <- ggplot(data_clean, aes(years, small_rings)) +
+  geom_col(width = .8, fill = text_colors) +
+  scale_y_reverse(expand = c(0, 0)) +
+  scale_x_discrete(position = "top")+
   theme(
     axis.title.x = element_blank(),
-    axis.text.x = element_text(angle = 80, hjust = 0, margin = margin(b = 3),color = text_colors),
-    axis.text.y = element_blank(), 
-    plot.margin = margin(4, 10, 4, 4)
+    axis.text.x = element_text(size = 7, angle = 85, hjust = -0.1, margin = margin(b = -2),color = text_colors),
+    axis.title.y = element_text(size=7),
+    axis.text.y.left = element_blank(),
+    
+    plot.margin = margin(3, 3, 3, 3),
+    panel.background = element_rect(fill = "white", colour = "white")
   )
 
 # Top graph
 p2 <- ggplot(data, aes(years, big_rings)) +
-  geom_col(width = 0.7) +
-  #scale_x_discrete(position = "bottom") +  # Display fewer labels
+  geom_col(width = .8, fill = "gray20") +
+  scale_y_continuous(expand = c(0, 0)) +
   theme(
     axis.title.x = element_blank(),
     axis.text.x = element_blank(),
-    axis.text.y = element_blank(), 
-    plot.margin = margin(4, 10, 4, 4)
+    axis.title.y = element_text(size=7),
+    axis.text.y.left = element_blank(),
+   
+    plot.margin = margin(3, 3, 3, 3),
+    panel.background = element_rect(fill = "white", colour = "white")
   )
 
 # Combine plots
 ggarrange(p2, p1, ncol = 1, nrow = 2)
+
+#list of marker rings
+
+###################################################################################
+
