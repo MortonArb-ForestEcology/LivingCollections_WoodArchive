@@ -2,3 +2,4 @@
 *.history
 scripts/.RData
 scripts/.Rhistory
+*.csv

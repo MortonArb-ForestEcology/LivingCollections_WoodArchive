@@ -77,7 +77,7 @@ plot(data$years,
 abline(h = 1, col = "red", lty = 2)
 
 #attempt at barchart
-barplot(data$std,
+barplot(data$std-1,
         names.arg = data$years, 
         xlab = "Year",
         ylab = "Standardized RWI (standardized std using AR model)", 
@@ -142,6 +142,7 @@ p2 <- ggplot(data, aes(years, big_rings)) +
 ggarrange(p2, p1, ncol = 1, nrow = 2)
 
 #list of marker rings
+
 
 ###################################################################################
 
