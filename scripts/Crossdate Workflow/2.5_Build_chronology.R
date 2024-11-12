@@ -17,6 +17,8 @@ library(ggplot2)
 library(stringr)
 library(ggpubr) # might need install.packages("ggpubr")
 
+#install.packages("crayon")
+
 #from testing on another script
 #setwd("~/Documents/Personal Projects/Dendrochronolgy-practice/Dendrochronolgy script")
 #path.dat <- file.path("/Users/jocelyngarcia/Documents/Personal Projects/Dendrochronolgy-practice/Dendrochronolgy script/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
@@ -86,63 +88,83 @@ barplot(data$std-1,
         cex.main = 1.5, 
         cex.lab = 1.2, 
         cex.axis = 1.1)
-abline(h = 1, col = "red", lty = 2) #for reference
 
 ###################################################################################
-
 #splitting std column, will be helpful for two sided barplot
 data <- data %>%
-  mutate(big_rings = ifelse(std >= 1, std, NA),
-         small_rings = ifelse(std < 1, std, NA))
-print(data[, c("std", "big_rings", "small_rings")]) #checking how data was split
+  mutate(big_rings = ifelse(std-1 >= 0, std-1, NA),
+         small_rings = ifelse(std-1 < 0, std-1, NA))
+print(data[, c("years", "std", "big_rings", "small_rings")]) #checking how data was split
 
+#ommiting NA's to calculate quantile 
+small_rings_no_NA <- na.omit(data$small_rings)
+
+#print(small_rings_no_NA)
+#summary(small_rings_no_NA)
+
+#messing w/quantiles, lowest 35 percent of the small rings will be reference for marker rings
+quantile_value <- quantile(small_rings_no_NA, probs = c(.10))
+print(quantile_value)
 
 #attempt at 2 sided barchart
+#TO PDF (for some reason doesnt plot id pdf is running)
+#pdf(file = "/Users/jocelyngarcia/Desktop/My Plot.pdf",   # The directory you want to save the file in
+   #width = 20, # The width of the plot in inches
+   #height = 9.5) # The height of the plot in inches
+
+
 axis_margin <- 4
 data$years <- factor(data$years)
 
 get_color <- function(value) {
   ifelse(is.na(value), "gray20", 
-         ifelse(value < 0.8, "indianred4", "darkslategray")) # for marker rings, pick value to sort by 
+         ifelse(value < quantile_value, "indianred4", "darkslategray")) # for marker rings, pick value to sort by 
 }
 
 # Apply the custom function to create a vector of colors
 text_colors <- get_color(data$small_rings)
 
 #Bottom Graph
-p1 <- ggplot(data_clean, aes(years, small_rings)) +
+p1 <- ggplot(data, aes(x = years, y = small_rings)) +
   geom_col(width = .8, fill = text_colors) +
-  scale_y_reverse(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
   scale_x_discrete(position = "top")+
   theme(
     axis.title.x = element_blank(),
     axis.text.x = element_text(size = 7, angle = 85, hjust = -0.1, margin = margin(b = -2),color = text_colors),
     axis.title.y = element_text(size=7),
-    axis.text.y.left = element_blank(),
+    axis.text.y.left = element_text(size=7),
     
     plot.margin = margin(3, 3, 3, 3),
     panel.background = element_rect(fill = "white", colour = "white")
   )
 
 # Top graph
-p2 <- ggplot(data, aes(years, big_rings)) +
+p2 <- ggplot(data, aes(x = years, y = big_rings)) +
   geom_col(width = .8, fill = "gray20") +
   scale_y_continuous(expand = c(0, 0)) +
   theme(
     axis.title.x = element_blank(),
     axis.text.x = element_blank(),
     axis.title.y = element_text(size=7),
-    axis.text.y.left = element_blank(),
+    axis.text.y = element_text(size = 7.25),,
    
     plot.margin = margin(3, 3, 3, 3),
     panel.background = element_rect(fill = "white", colour = "white")
   )
-
 # Combine plots
 ggarrange(p2, p1, ncol = 1, nrow = 2)
 
-#list of marker rings
+###################################################################################
+#Printing Marker Rings
+#Finding rows where small_rings_no_NA is less than the quantile
+rows_under_quantile <- which(data$small_rings < quantile_value & !is.na(data$small_rings))
+#print(rows_under_quantile)
 
+result <- data[rows_under_quantile, c("years", "small_rings")]
+print("Marker Rings Years & Values:")
+print(result) # should all be less than quantile_value
 
 ###################################################################################
+#dev.off()
 
