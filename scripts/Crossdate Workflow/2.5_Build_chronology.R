@@ -1,3 +1,5 @@
+##----------------------------------------------------------------------------------------------------------------------------------#
+#Script 3 of 3
 #Script by: Jocelyn Garcia, script builds off of previously written Scripts 1_Ring_width_read_and_clean, and 2_Crossdate, and DendroHelpTutorialCode 
 #Written by Brendon Reidy, Christy Rollinson, and Dr. Stockton Maxwell
 #Project: Living Collections Wood Archive 
@@ -8,6 +10,7 @@
 #Resources:
 #https://stackoverflow.com/questions/76510836/how-to-plot-two-sided-bar-with-text-in-middle-chart-in-r
 #http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
+
 
 library(dplyr)
 library(TRADER)
@@ -65,6 +68,8 @@ summary(combined.rwl)
 
 data <- read.csv(file.path(path.out, "chronology.csv")) #in chronology.csv res= residuals? Double check w/ Christy
 summary(data)
+write.csv(data, file.path("/Users/jocelyngarcia/shiny_app/LCWA_Chronology/data", "RingData.csv"), row.names=F)
+
 
 #checking data before any plotting
 print(data)
@@ -102,7 +107,7 @@ small_rings_no_NA <- na.omit(data$small_rings)
 #print(small_rings_no_NA)
 #summary(small_rings_no_NA)
 
-#messing w/quantiles, lowest 35 percent of the small rings will be reference for marker rings
+#messing w/quantiles, lowest 10 percent of the small rings will be reference for marker rings
 quantile_value <- quantile(small_rings_no_NA, probs = c(.10))
 print(quantile_value)
 
@@ -167,4 +172,7 @@ print(result) # should all be less than quantile_value
 
 ###################################################################################
 #dev.off()
+
+#putting together data for Shiny App
+write.csv(result, file.path("/Users/jocelyngarcia/shiny_app/LCWA_Chronology/data", "MarkerRingYears.csv"), row.names=F)
 
