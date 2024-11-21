@@ -122,8 +122,8 @@ axis_margin <- 4
 data$years <- factor(data$years)
 
 get_color <- function(value) {
-  ifelse(is.na(value), "gray20", 
-         ifelse(value < quantile_value, "indianred4", "darkslategray")) # for marker rings, pick value to sort by 
+  ifelse(is.na(value), "darkslategray", 
+         ifelse(value < quantile_value, "darkslategray4", "tan4")) # for marker rings, pick value to sort by 
 }
 
 # Apply the custom function to create a vector of colors
@@ -146,7 +146,7 @@ p1 <- ggplot(data, aes(x = years, y = small_rings)) +
 
 # Top graph
 p2 <- ggplot(data, aes(x = years, y = big_rings)) +
-  geom_col(width = .8, fill = "gray20") +
+  geom_col(width = .8, fill = "darkslategray") +
   scale_y_continuous(expand = c(0, 0)) +
   theme(
     axis.title.x = element_blank(),
