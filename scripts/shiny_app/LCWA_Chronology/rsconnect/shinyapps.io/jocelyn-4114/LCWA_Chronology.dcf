@@ -1,0 +1,13 @@
+name: LCWA_Chronology
+title: LCWA_Chronology
+username: jocelyn-4114
+account: jocelyn-4114
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 13416066
+bundleId: 9454598
+url: https://jocelyn-4114.shinyapps.io/LCWA_Chronology/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: interseries_corrs.csv|rwl_stats_run.csv|rwl_stats.csv

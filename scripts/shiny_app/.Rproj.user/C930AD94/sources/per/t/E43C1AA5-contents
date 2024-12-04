@@ -1,0 +1,63 @@
+##----------------------------------------------------------------------------------------------------------------------------------#
+#Script 2 of 3
+#Purpose of Script is to take care of the crossdating
+#Most of script uses code from previously written script by Brendon Reidy, Christy Rollinson
+#Workflow:
+
+library(dplR)
+library(XML)
+library(TRADER)
+library(graphics)
+library(utils)
+
+library("XML")
+library("methods")
+
+#path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
+#path.dat <- file.path("/Users/jocelyngarcia/Documents/Personal Projects/Dendrochronolgy-practice/Dendrochronolgy script/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+#path.out <- file.path("/Users/jocelyngarcia/Documents/Personal Projects/Dendrochronolgy-practice/Dendrochronolgy script/Combined Ring Width Series/Quercus")
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
+path.dat <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+path.out <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
+
+
+if(!dir.exists(path.out)) dir.create(path.out, recursive = T)
+
+series.metadata <- read.csv(file.path(path.out, "Series-Metadata_all.csv"))
+combined.rwl <- read.csv(file.path(path.out, "Series-Measurements_all.csv"), row.names=1)
+
+dim(series.metadata); dim(combined.rwl)
+###################################################################################
+summary(combined.rwl)
+summary(series.metadata)
+
+corr.rwl.seg(rwl = combined.rwl, seg.length = 10, bin.floor = 1850, n = NULL, prewhiten = TRUE, pcrit = 0.05, 
+             biweight = TRUE, method = c("spearman"), make.plot = TRUE, label.cex = 1, floor.plus1 = FALSE,
+             master = NULL) #cofecha essentially
+
+series.rwl.plot(combined.rwl, series = "SARGLA.575.641.11.1.1.xml", series.yrs = as.numeric(names(series)), #look at an individual series *go back & check why we need this
+                seg.length = 20, bin.floor = 0, n = NULL,
+                prewhiten = TRUE, biweight = TRUE, floor.plus1 = FALSE)
+
+
+inter <- interseries.cor(combined.rwl, n = NULL, prewhiten = TRUE, biweight = TRUE, method = "spearman")#calculate interseries correlations for each series
+write.csv(inter, file = "interseries_corrs.csv") #write to a file
+
+#spaghetti plot of raw ring widths
+spag.plot(rwl = combined.rwl, zfac = 1, useRaster = FALSE, res = 300)
+
+
+###################################################################################
+#Arstan stuff in dplR - this section of the package detrends or standardizes series into a site chronology
+
+#interactive detrending - this allows you to explore curve fits for each tree ring series
+#combined.rwl.int <- i.detrend(rwl = combined.rwl, nyrs = NULL, f = 0.5,pos.slope = FALSE) #allows you to see a variety of fits
+#spag.plot(rwl = combined.rwl.int, zfac = 1, useRaster = FALSE, res = 300) #again but with the detrended series
+
+#detrend all series at once - after you know which option is best for your data. Just adjust the method.
+grow.rwl <- detrend(rwl = combined.rwl, method = c("Spline"), nyrs = NULL, f = 0.5, pos.slope = FALSE) 
+rwl_stats <- rwi.stats(combined.rwl) #stats for entire crn
+write.csv(rwl_stats, file = "rwl_stats.csv")
+rwl_stats_run <- rwi.stats.running(combined.rwl) #running stats - time periods can be adjusted, see help
+write.csv(rwl_stats_run, file = "rwl_stats_run.csv")
+

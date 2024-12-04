@@ -1,0 +1,44 @@
+###----------------------------------------------------------------------------------------------------------------------------------#
+#Script 3.5 of 4 
+#Script by: Jocelyn Garcia
+#Project: Living Collections Wood Archive 
+#Purpose:Create a web application housing the master chronology from "2.5_Build_chronology.R."
+#         Web app should allow for isolation of certain time period inputed by the user.
+#Helpful resource: https://mastering-shiny.org/basic-app.html
+# This is the user-interface definition of a Shiny web application. You can
+# run the application by clicking 'Run App' above.
+#
+# Find out more about building applications with Shiny here:
+#
+#    https://shiny.posit.co/
+
+library(shiny)
+
+#not sure if we'll need these yet
+path.google <- "~/Library/CloudStorage/GoogleDrive-jgarcia@mortonarb.org/My Drive/LivingCollections_WoodArchive/"
+path.dat <- file.path(path.google, "Data/RAW Ring Width Series/Quercus RW Tridas 2024-07-16")
+path.out <- file.path(path.google, "Data/Combined Ring Width Series/Quercus")
+
+
+# Define UI for application that draws a histogram
+fluidPage(
+
+    # Application title
+    titlePanel("Old Faithful Geyser Data"),
+
+    # Sidebar with a slider input for number of bins
+    sidebarLayout(
+        sidebarPanel(
+            sliderInput("bins",
+                        "Number of bins:",
+                        min = 1,
+                        max = 50,
+                        value = 30)
+        ),
+
+        # Show a plot of the generated distribution
+        mainPanel(
+            plotOutput("distPlot")
+        )
+    )
+)
