@@ -3,3 +3,4 @@
 scripts/.RData
 scripts/.Rhistory
 *.csv
+.Rproj.user
